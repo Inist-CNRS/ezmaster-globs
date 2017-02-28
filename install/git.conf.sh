@@ -20,6 +20,7 @@ source "$LIBSDIR/ansicolors.rc"
 source "$LIBSDIR/libs/std.rc"
 
 GIT_SHELL=$(which git-shell)
+GIT_HOME="/home/git"
 
 # ------------------------------------------------------------------------------
 # Création de l'utilisateur GIT

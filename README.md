@@ -11,3 +11,12 @@ utilisés au DPI de l'INIST.
   * update régulier des dépôts du serveur local via cron à partir d'une liste
     de dépôts GitHub exploités par le DPI
 
+## Utilisation
+Pour installer un GLoBS, il suffit de lancer ``install.sh`` (de préférence sur
+une machine fraichement installée en ``Ubuntu server``).
+
+```
+    $ ./install.sh
+```
+
+## Fonctionnement

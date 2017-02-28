@@ -22,9 +22,19 @@ source "$LIBSDIR/libs/std.rc"
 GLoBS_HOME="/home/globs"
 GLoBS_BINS="/home/globs/bin"
 
+# Répertoire des scripts du user "globs"
 mkdir -p "$GLoBS_BINS"
+
+# Les jobs cron du user "globs" et du root
 cp "$INSTALLDIR/globs.cron.sh" "$GLoBS_BINS"
 chmod +x "GLoBS_BINS/globs.cron.sh"
-chown globs:globs "GLoBS_BINS/globs.cron.sh"
+cp "$INSTALLDIR/root.cron.sh" "$GLoBS_BINS"
+chmod +x "GLoBS_BINS/root.cron.sh"
+
+# Le fichier aved la liste des repositories
+cp "$INSTALLDIR/repositories.list" "$GLoBS_BINS"
+
+# Redonner la propriété au user "globs"
+chown globs:globs "GLoBS_BINS/"
 
 
