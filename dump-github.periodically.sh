@@ -21,10 +21,10 @@ do
       GITHUB_CLONE_FOLDER=$(basename $GITHUB_CLONE_URL)    
       if [ ! -d $GITHUB_CLONE_FOLDER ]; then
         echo "-> Dumping a new github repository: $GITHUB_CLONE_URL"
-        git clone --bare $GITHUB_CLONE_URL
+        git clone -q --bare $GITHUB_CLONE_URL
       fi
       cd $GITHUB_CLONE_FOLDER
-      git fetch -v --all
+      git fetch --all
       git update-server-info
 
 
