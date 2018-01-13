@@ -25,6 +25,6 @@ before_install:
   - sleep 120 ; docker-compose -f ./docker-compose.debug.yml logs
 
 script:
-  - git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer
+  - git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
 
 

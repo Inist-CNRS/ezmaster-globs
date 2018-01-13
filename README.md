@@ -40,6 +40,6 @@ Se connecter ensuite sur http://127.0.0.1:8080/ pour visualiser les dépôts, pa
 Vous pouvez alors les clonner localement de cette manière (exemple ici sur le dépôt node-xml-writer qui est clonné localement par défaut car config.json demande de clonner l'organisation github inist-cnrs) :
 
 ```
-git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer
+git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
 ```
 
