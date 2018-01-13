@@ -5,7 +5,31 @@
 while true
 do
 
-  # loop over all the organization repo list
+
+  # cleanup the dereferenced (config.json) github organizations
+  rm -f /tmp/GITHUB_ORGANIZATION_NEW && touch /tmp/GITHUB_ORGANIZATION_NEW
+  rm -f /tmp/GITHUB_ORGANIZATION_OLD && touch /tmp/GITHUB_ORGANIZATION_OLD
+  for GITHUB_ORGANIZATION in $GITHUB_ORGANIZATIONS
+  do
+    echo $GITHUB_ORGANIZATION >> /tmp/GITHUB_ORGANIZATION_NEW
+  done
+  for GITHUB_ORGANIZATION in $(ls /usr/local/apache2/htdocs/)
+  do
+    echo $GITHUB_ORGANIZATION >> /tmp/GITHUB_ORGANIZATION_OLD
+  done
+  # to understand comm -23
+  # see https://stackoverflow.com/questions/11165182/bash-difference-between-two-lists
+  for GITHUB_ORGANIZATION_TOCLEAN in $(comm -23 <(sort /tmp/GITHUB_ORGANIZATION_OLD) <(sort /tmp/GITHUB_ORGANIZATION_NEW))
+  do
+    echo "-> Cleaning old github organization $GITHUB_ORGANIZATION_TOCLEAN [taille = $(du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION_TOCLEAN | awk '{ print $1 }')]"
+    rm -rf /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION_TOCLEAN
+  done
+
+
+
+
+  # loop over all the organization repo list 
+  # and clone its repositories locally
   for GITHUB_ORGANIZATION in $GITHUB_ORGANIZATIONS
   do
 
