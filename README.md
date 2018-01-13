@@ -10,7 +10,20 @@ L'application permet de :
 
 ## Production
 
-Utiliser ezmaster pour déployer l'application.
+Utiliser [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployer l'application `inist-cnrs/ezmaster-globs:1.0.0`
+
+Créer ensuite une instance de cette application et paramétrez la en modifiant ces variables :
+
+```json
+{
+  "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
+  "DUMP_EACH_NBMINUTES": 1
+}
+```
+
+La variable `GITHUB_ORGANIZATIONS` doit contenir la liste des organisation github que vous souhaitez sauvegarder.
+
+La variable `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
 
 ## Développements
 
