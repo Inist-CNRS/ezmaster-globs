@@ -22,7 +22,7 @@ before_install:
   # build an run ezmaster-globs
   - make build
   - docker-compose -f ./docker-compose.debug.yml up -d
-  - sleep 120 ; docker-compose logs
+  - sleep 120 ; docker-compose -f ./docker-compose.debug.yml logs
 
 script:
   - git clone https://127.0.0.1:8080/inist-cnrs/node-xml-writer
