@@ -1,6 +1,6 @@
 {
   "name": "ezmaster-globs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Github LOcal Backup Server",
   "scripts": {
     "insertversion:readme": "sed -i \"s#\\(inistcnrs/ezmaster-globs:\\)\\([\\.a-z0-9]\\+\\)#\\1${npm_package_version}#g\" README.md",
