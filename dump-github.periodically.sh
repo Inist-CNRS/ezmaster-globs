@@ -37,6 +37,12 @@ do
     mkdir -p /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
 
     GITHUB_CLONE_URLS=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos | jq -r '.[].clone_url')
+    if [ "$GITHUB_CLONE_URLS" == "[]" ]; then
+      GITHUB_CLONE_URLS=$(cat /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.cache)
+    else
+      echo $GITHUB_CLONE_URLS > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.cache
+    fi
+
     for GITHUB_CLONE_URL in $GITHUB_CLONE_URLS
     do
       
