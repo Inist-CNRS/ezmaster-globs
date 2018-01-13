@@ -1,0 +1,21 @@
+{
+  "name": "ezmaster-globs",
+  "version": "1.0.0",
+  "description": "Github LOcal Backup Server",
+  "scripts": {
+    "insertversion:readme": "sed -i \"s#\\(inistcnrs/ezmaster-globs:\\)\\([\\.a-z0-9]\\+\\)#\\1${npm_package_version}#g\" README.md",
+    "insertversion:makefile": "sed -i \"s#\\(inistcnrs/ezmaster-globs:\\)\\([\\.a-z0-9]\\+\\)#\\1${npm_package_version}#g\" Makefile",
+    "version": "npm run insertversion:readme && npm run insertversion:makefile && git add README.md Makefile",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Inist-CNRS/ezmaster-globs.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Inist-CNRS/ezmaster-globs/issues"
+  },
+  "homepage": "https://github.com/Inist-CNRS/ezmaster-globs#readme",
+  "dependencies": {}
+}

@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+
+  globs:
+    container_name: globs
+    build:
+      context: .
+      args:
+        - http_proxy
+        - https_proxy
+    ports:
+      - 8080:80
+    volumes:
+      - ./dump-github.periodically.sh:/dump-github.periodically.sh
+      - ./config.json:/config.json
+      - ./entrypoint.sh:/entrypoint.sh
+
+
