@@ -56,10 +56,16 @@ do
       cd $GITHUB_CLONE_FOLDER
       git fetch --all
       git update-server-info
-
+  
+      # update the repository size 
+      du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_CLONE_FOLDER | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_CLONE_FOLDER/GITHUB_CLONE_SIZE.txt
 
     done # GITHUB_CLONE_URLS loop
-  
+
+    # update the full organization size
+    du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_SIZE.txt
+    # update the organization repositories list
+    cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt*
 
   done # GITHUB_ORGANIZATIONS loop
 
