@@ -1,0 +1,17 @@
+section {
+  margin:auto;
+  width: 600px;
+}
+
+footer {
+  margin-top: 100px;
+}
+footer hr {
+  margin: 0;
+  border: 0.5px solid #AAA;
+}
+footer p {
+  margin: 0;
+  font-size: 11px;
+  text-align: right;
+}

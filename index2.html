@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GLoBS : Github LOcal Backup Server</title>
+    <link rel="stylesheet"
+          href="/node_modules/material-components-web/dist/material-components-web.css" />
+    <link rel="stylesheet"
+          href="/index.css" />          
+  </head>
+  <body class="mdc-typography">
+
+
+    <section>
+      <h2 class="mdc-typography--display1">Github organization: <a class="globs-title" href=""></a></h2>
+      <ul class="mdc-list mdc-list--two-line">
+        <li class="mdc-list-item">
+          <span class="mdc-list-item__text">
+            <a class="globs-item-repository mdc-typography--display1" href="..">&#128281;</a>
+          </span>
+        </li>        
+        <script id="index-item-template" type="text/x-custom-template">
+          <li class="mdc-list-item">
+            <span class="mdc-list-item__text">
+              <a class="globs-item-repository" href="">___</a>
+              <span class="globs-item-gitclone mdc-list-item__secondary-text">git clone ___</span>
+            </span>
+            <span class="globs-item-size mdc-list-item__meta">Taille : ___</span>
+          </li>
+        </script>
+
+      </ul>
+    </section>
+
+    <footer>
+      <hr />
+      <p>
+        <a href="https://github.com/Inist-CNRS/ezmaster-globs">GLoBS : Github LOcal Backup Server</a> version 1.1.0
+      </p>
+    </footer>
+
+    <script src="/node_modules/material-components-web/dist/material-components-web.js"></script>
+    <script>mdc.autoInit()</script>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script>
+      var GITHUB_ORGANIZATION = document.location.pathname.slice(1,-1);
+      $('.globs-title').text(GITHUB_ORGANIZATION).attr('href', 'https://github.com/' + GITHUB_ORGANIZATION);
+      var templateHtml = $('#index-item-template').html();
+
+      $.get('/' + GITHUB_ORGANIZATION + '/GITHUB_ORGANIZATION_CONTENT.txt').done(function (data) {
+        var GITHUB_REPO_LIST = data.trim().split('\n');
+        GITHUB_REPO_LIST.forEach(function (GITHUB_REPO) {
+          GITHUB_REPO = GITHUB_REPO.replace('.git/', '');
+          var templateDom = $(templateHtml);
+          templateDom.find('.globs-item-repository')
+            .text(GITHUB_ORGANIZATION + '/' + GITHUB_REPO)
+            .attr('href', 'https://github.com/' + GITHUB_ORGANIZATION + '/' + GITHUB_REPO);
+          templateDom.find('.globs-item-gitclone').text('git clone ' + document.location.href + GITHUB_REPO + '.git');
+          $.get('/' + GITHUB_ORGANIZATION + '/' + GITHUB_REPO + '.git/GITHUB_CLONE_SIZE.txt').done(function (data) {
+            templateDom.find('.globs-item-size').text('Taille : ' + data.trim());
+          }).always(function () {
+            $('section ul').append(templateDom);
+          });
+        });
+      }).always(function () {
+        // ...
+      });
+
+
+    </script>
+
+  </body>
+</html>

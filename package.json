@@ -18,5 +18,8 @@
     "url": "https://github.com/Inist-CNRS/ezmaster-globs/issues"
   },
   "homepage": "https://github.com/Inist-CNRS/ezmaster-globs#readme",
-  "dependencies": {}
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "material-components-web": "^0.28.0"
+  }
 }

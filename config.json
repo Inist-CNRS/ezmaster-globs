@@ -1,4 +1,4 @@
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
-  "DUMP_EACH_NBMINUTES": 1
+  "DUMP_EACH_NBMINUTES": 5
 }

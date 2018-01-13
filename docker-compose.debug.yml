@@ -16,5 +16,8 @@ services:
       - ./dump-github.periodically.sh:/dump-github.periodically.sh
       - ./config.json:/config.json
       - ./entrypoint.sh:/entrypoint.sh
+      - ./index.html:/usr/local/apache2/htdocs/index.html
+      - ./index2.html:/usr/local/apache2/htdocs/index2.html
+      - ./index.css:/usr/local/apache2/htdocs/index.css
 
 

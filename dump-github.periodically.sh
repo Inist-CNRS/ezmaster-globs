@@ -13,7 +13,8 @@ do
   do
     echo $GITHUB_ORGANIZATION >> /tmp/GITHUB_ORGANIZATION_NEW
   done
-  for GITHUB_ORGANIZATION in $(ls /usr/local/apache2/htdocs/)
+  cd /usr/local/apache2/htdocs/
+  for GITHUB_ORGANIZATION in $(ls -d */ | sed 's#.$##g' | grep -v node_modules)
   do
     echo $GITHUB_ORGANIZATION >> /tmp/GITHUB_ORGANIZATION_OLD
   done
@@ -26,7 +27,12 @@ do
   done
 
 
-
+  # create the organization list for the index.html 
+  rm -f /usr/local/apache2/htdocs/GITHUB_ORGANIZATIONS.txt && touch /usr/local/apache2/htdocs/GITHUB_ORGANIZATIONS.txt
+  for GITHUB_ORGANIZATION in $GITHUB_ORGANIZATIONS
+  do
+    echo $GITHUB_ORGANIZATION >> /usr/local/apache2/htdocs/GITHUB_ORGANIZATIONS.txt
+  done
 
   # loop over all the organization repo list 
   # and clone its repositories locally
@@ -35,6 +41,7 @@ do
 
     echo "-> Dumping the $GITHUB_ORGANIZATION github organization"
     mkdir -p /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
+    cp -f /usr/local/apache2/htdocs/index2.html /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/index.html
 
     GITHUB_CLONE_URLS=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos | jq -r '.[].clone_url')
     if [ "$GITHUB_CLONE_URLS" == "[]" ]; then
@@ -45,7 +52,6 @@ do
 
     for GITHUB_CLONE_URL in $GITHUB_CLONE_URLS
     do
-      
 
       cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
       GITHUB_CLONE_FOLDER=$(basename $GITHUB_CLONE_URL)    
@@ -65,7 +71,7 @@ do
     # update the full organization size
     du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_SIZE.txt
     # update the organization repositories list
-    cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt*
+    cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt
 
   done # GITHUB_ORGANIZATIONS loop
 
