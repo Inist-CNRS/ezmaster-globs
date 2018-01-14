@@ -32,6 +32,8 @@ do
   for GITHUB_ORGANIZATION in $GITHUB_ORGANIZATIONS
   do
     echo $GITHUB_ORGANIZATION >> /usr/local/apache2/htdocs/GITHUB_ORGANIZATIONS.txt
+    mkdir -p /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
+    cp -f /usr/local/apache2/htdocs/index2.html /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/index.html
   done
 
   # loop over all the organization repo list 
@@ -40,15 +42,32 @@ do
   do
 
     echo "-> Dumping the $GITHUB_ORGANIZATION github organization"
-    mkdir -p /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
-    cp -f /usr/local/apache2/htdocs/index2.html /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/index.html
 
-    GITHUB_CLONE_URLS=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos | jq -r '.[].clone_url')
-    if [ "$GITHUB_CLONE_URLS" == "[]" ]; then
-      GITHUB_CLONE_URLS=$(cat /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.cache)
+    # loop over all the github organization pages to be sure to have all the
+    # repositories of this organization.
+    # this loop uses the github v3 API
+    GITHUB_CLONE_URLS=""
+    PAGE=1
+    GITHUB_CU_PAGE="."
+    while [ "$GITHUB_CU_PAGE" != "" ]
+    do
+      GITHUB_CU_PAGE=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE} | jq -r '.[].clone_url')
+      if [ "$GITHUB_CU_PAGE" != "" ] && [ "$GITHUB_CU_PAGE" != "[]" ]; then
+        GITHUB_CLONE_URLS="$GITHUB_CLONE_URLS $GITHUB_CU_PAGE"
+        PAGE=$(($PAGE + 1))
+      else
+        # stop looping over pages
+        GITHUB_CU_PAGE=""
+      fi
+    done
+    if [ "$GITHUB_CLONE_URLS" == "" ]; then
+      GITHUB_CLONE_URLS=$(cat /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.txt)
     else
-      echo $GITHUB_CLONE_URLS > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.cache
+      echo $GITHUB_CLONE_URLS > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_CLONE_URLS.txt
     fi
+
+
+
 
     for GITHUB_CLONE_URL in $GITHUB_CLONE_URLS
     do
