@@ -50,6 +50,7 @@ docker run -d -p 8080:80 --name ezmaster-globs inistcnrs/ezmaster-globs:2.0.3
 ```bash
 make build     # pour construire l'image docker
 make run-debug # pour lancer le serveur web et le clonage
+DUMP_EACH_NBMINUTES=1 GITHUB_ORGANIZATIONS="abes-esr" make run-debug # pour personnaliser depuis des variables d'env
 ```
 
 Se connecter ensuite sur http://127.0.0.1:8080/ pour visualiser les dépôts, par défaut `config.json` référence les dépôts de [l'organisation github `inist-cnrs`](https://github.com/Inist-CNRS/)
