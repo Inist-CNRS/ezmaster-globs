@@ -10,34 +10,51 @@ L'application permet de :
 
 - régulièrement (variable `DUMP_EACH_NBMINUTES`) cloner et se synchroniser avec les dépôts des organisations github passées en argument (variable `GITHUB_ORGANIZATIONS`)
 - mettre à disposition les dépôts clonés à travers un serveur web (protocole http) et ainsi permettre de réaliser des `git clone` en lecture seule de ces dépôts
+- (optionnellement) réaliser un mirroir des dépôts sur une instance gitlab
 
-## Production
+## Variables de configuration
 
-Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inist-cnrs/ezmaster-globs:1.0.0`
+- `GITHUB_ORGANIZATIONS` doit contenir la liste des organisation github que vous souhaitez sauvegarder.
+- `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
+- `GITLAB_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des mirroirs.
+- `GITLAB_API_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab.
 
-Créez ensuite une instance de cette application et paramétrez-la en modifiant ces variables :
+## Production avec ezmaster
+
+Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inistcnrs/ezmaster-globs:2.0.3`
+
+Créez ensuite une instance de cette application et paramétrez-la en modifiant ces variables dans la config JSON :
 
 ```json
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
-  "DUMP_EACH_NBMINUTES": 1
+  "DUMP_EACH_NBMINUTES": 1,
+  "GITLAB_BASEURL": "https://git.abes.fr",
+  "GITLAB_API_TOKEN": "xxxxx"
 }
 ```
 
-La variable `GITHUB_ORGANIZATIONS` doit contenir la liste des organisation github que vous souhaitez sauvegarder.
+## Production sans ezmaster
 
-La variable `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
+Utilisez alors docker pour déployer `inistcnrs/ezmaster-globs:2.0.3`
+
+Créez et lancez alors le conteneur de cette manière :
+
+```shell
+docker run -d -p 8080:80 --name ezmaster-globs inistcnrs/ezmaster-globs:2.0.3
+```
+
 
 ## Développements
 
 ```bash
 make build     # pour construire l'image docker
-make run-debug # pour lancer le serveur web et le clonnage
+make run-debug # pour lancer le serveur web et le clonage
 ```
 
 Se connecter ensuite sur http://127.0.0.1:8080/ pour visualiser les dépôts, par défaut `config.json` référence les dépôts de [l'organisation github `inist-cnrs`](https://github.com/Inist-CNRS/)
 
-Vous pouvez alors les cloner localement de cette manière (exemple ici sur le dépôt node-xml-writer qui est cloné localement par défaut car config.json demande de cloner l'organisation github inist-cnrs) :
+Vous pouvez tester de les cloner à partir du serveur web fourni par ezmaster-globs de cette manière (exemple ici sur le dépôt node-xml-writer qui est cloné localement par défaut car config.json demande de cloner l'organisation github inist-cnrs) :
 
 ```
 git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
