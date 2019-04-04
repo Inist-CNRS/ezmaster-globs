@@ -1,4 +1,4 @@
-FROM httpd:2.4.29
+FROM httpd:2.4.39
 
 # vim for debug
 # git is widly used for this app
@@ -20,10 +20,10 @@ RUN cd /usr/local/apache2/htdocs/ && npm install
 
 COPY entrypoint.sh /
 COPY dump-github.periodically.sh /
-COPY config.json /
 
 # ezmasterization of ezmaster-globs
 # see https://github.com/Inist-CNRS/ezmaster
+COPY config.json /
 RUN echo '{ \
   "httpPort": 80, \
   "configPath": "/config.json", \
