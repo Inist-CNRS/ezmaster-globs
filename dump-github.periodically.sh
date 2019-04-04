@@ -6,7 +6,8 @@ while true
 do
 
 
-  # cleanup the dereferenced (config.json) github organizations
+  # cleanup the dereferenced github organizations
+  # since this latest script execution (example: when a docker restart is done) 
   rm -f /tmp/GITHUB_ORGANIZATION_NEW && touch /tmp/GITHUB_ORGANIZATION_NEW
   rm -f /tmp/GITHUB_ORGANIZATION_OLD && touch /tmp/GITHUB_ORGANIZATION_OLD
   for GITHUB_ORGANIZATION in $GITHUB_ORGANIZATIONS
@@ -68,7 +69,7 @@ do
 
 
 
-
+    # we now have all the github repositories to clone/fetch locally so do it now!
     for GITHUB_CLONE_URL in $GITHUB_CLONE_URLS
     do
 
@@ -77,9 +78,11 @@ do
       if [ ! -d $GITHUB_CLONE_FOLDER ]; then
         echo "-> Dumping a new github repository: $GITHUB_CLONE_URL"
         git clone -q --bare $GITHUB_CLONE_URL
+      else
+        echo "-> Fetching new data from github: $GITHUB_CLONE_URL"
+        cd $GITHUB_CLONE_FOLDER
+        git fetch --all
       fi
-      cd $GITHUB_CLONE_FOLDER
-      git fetch --all
       git update-server-info
   
       # update the repository size 
@@ -87,13 +90,16 @@ do
 
     done # GITHUB_CLONE_URLS loop
 
-    # update the full organization size
+
+
+    # update the full organization size for the HTML view
     du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_SIZE.txt
-    # update the organization repositories list
+    # update the organization repositories list for the HTML view
     cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt
+
 
   done # GITHUB_ORGANIZATIONS loop
 
-  echo "Waiting $DUMP_EACH_NBMINUTES minutes before next dump."
+  echo "-> Waiting $DUMP_EACH_NBMINUTES minutes before next dump."
   sleep ${DUMP_EACH_NBMINUTES}m
 done
