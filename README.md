@@ -15,9 +15,11 @@ L'application permet de :
 ## Variables de configuration
 
 - `GITHUB_ORGANIZATIONS` doit contenir la liste des organisation github que vous souhaitez sauvegarder.
-- `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
+- `GITHUB_OAUTH_TOKEN` doit contenir le token OAUTH issu d'un compte github pour pouvoir naviguer via l'API de github dans la liste des dépôts et pouvoir dépasser la [limite de requête en mode anonyme](https://developer.github.com/v3/#rate-limiting).
 - `GITLAB_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des mirroirs.
-- `GITLAB_API_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab.
+- `GITLAB_PERSONAL_ACCESS_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab.
+- `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
+- `DUMP_TO` doit contenir la liste des emplacement où sauvegarder : "local" et/ou "gitlab"
 
 ## Production avec ezmaster
 
@@ -28,9 +30,11 @@ Créez ensuite une instance de cette application et paramétrez-la en modifiant 
 ```json
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
-  "DUMP_EACH_NBMINUTES": 1,
+  "GITHUB_OAUTH_TOKEN": "",
   "GITLAB_BASEURL": "https://git.abes.fr",
-  "GITLAB_API_TOKEN": "xxxxx"
+  "GITLAB_PERSONAL_ACCESS_TOKEN": "xxxxx",
+  "DUMP_EACH_NBMINUTES": 1,
+  "DUMP_TO": [ "local", "gitlab "]
 }
 ```
 

@@ -1,5 +1,8 @@
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
   "GITHUB_OAUTH_TOKEN": "",
-  "DUMP_EACH_NBMINUTES": 5
+  "GITLAB_BASEURL": "",
+  "GITLAB_PERSONAL_ACCESS_TOKEN": "",
+  "DUMP_EACH_NBMINUTES": 5,
+  "DUMP_TO": [ "local" ]
 }

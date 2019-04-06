@@ -18,6 +18,7 @@ services:
       DUMP_EACH_NBMINUTES: ${DUMP_EACH_NBMINUTES}
     volumes:
       - ./dump-github.periodically.sh:/dump-github.periodically.sh
+      - ./github-functions.sh:/github-functions.sh
       - ./config.json:/config.json
       - ./entrypoint.sh:/entrypoint.sh
       - ./index.html:/usr/local/apache2/htdocs/index.html
