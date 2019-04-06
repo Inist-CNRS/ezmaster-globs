@@ -14,6 +14,7 @@ services:
       - 8080:80
     environment:
       GITHUB_ORGANIZATIONS: ${GITHUB_ORGANIZATIONS}
+      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       DUMP_EACH_NBMINUTES: ${DUMP_EACH_NBMINUTES}
     volumes:
       - ./dump-github.periodically.sh:/dump-github.periodically.sh

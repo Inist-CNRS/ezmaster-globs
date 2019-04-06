@@ -2,6 +2,13 @@
 # script looping indefinitly and doing each X hours
 # a github backup into /usr/local/apache2/htdocs/ folder
 
+
+if [ "$GITHUB_OAUTH_TOKEN" != "" ]; then
+  CURL_HEADER_GITHUB_AUTH="Authorization: token ${GITHUB_OAUTH_TOKEN}"
+fi
+
+echo $CURL_HEADER_GITHUB_AUTH
+
 while true
 do
 
@@ -52,7 +59,9 @@ do
     GITHUB_CU_PAGE="."
     while [ "$GITHUB_CU_PAGE" != "" ]
     do
-      GITHUB_CU_PAGE=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE} | jq -r '.[].clone_url')
+      GITHUB_CU_PAGE=$(curl -s -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE} | jq -r '.[].clone_url')
+      curl -s -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE}
+      echo "KKKKKKKKKKKKKKKKKK $GITHUB_CU_PAGE"
       if [ "$GITHUB_CU_PAGE" != "" ] && [ "$GITHUB_CU_PAGE" != "[]" ]; then
         GITHUB_CLONE_URLS="$GITHUB_CLONE_URLS $GITHUB_CU_PAGE"
         PAGE=$(($PAGE + 1))

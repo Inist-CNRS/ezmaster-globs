@@ -1,4 +1,5 @@
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
+  "GITHUB_OAUTH_TOKEN": "",
   "DUMP_EACH_NBMINUTES": 5
 }
