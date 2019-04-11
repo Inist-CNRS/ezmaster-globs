@@ -15,10 +15,14 @@ services:
     environment:
       GITHUB_ORGANIZATIONS: ${GITHUB_ORGANIZATIONS}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+      GITLAB_BASEURL: ${GITLAB_BASEURL}
+      GITLAB_PERSONAL_ACCESS_TOKEN: ${GITLAB_PERSONAL_ACCESS_TOKEN}
       DUMP_EACH_NBMINUTES: ${DUMP_EACH_NBMINUTES}
+      DUMP_TO: ${DUMP_TO}
     volumes:
       - ./dump-github.periodically.sh:/dump-github.periodically.sh
       - ./github-functions.sh:/github-functions.sh
+      - ./gitlab-functions.sh:/gitlab-functions.sh
       - ./config.json:/config.json
       - ./entrypoint.sh:/entrypoint.sh
       - ./index.html:/usr/local/apache2/htdocs/index.html

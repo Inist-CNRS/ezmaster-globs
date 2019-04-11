@@ -21,6 +21,7 @@ RUN cd /usr/local/apache2/htdocs/ && npm install
 COPY entrypoint.sh /
 COPY dump-github.periodically.sh /
 COPY github-functions.sh /
+COPY gitlab-functions.sh /
 
 # ezmasterization of ezmaster-globs
 # see https://github.com/Inist-CNRS/ezmaster
