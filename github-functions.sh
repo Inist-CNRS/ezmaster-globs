@@ -31,8 +31,11 @@ function get_github_organization_info() {
     CURL_HEADER_GITHUB_AUTH="Authorization: token ${GITHUB_OAUTH_TOKEN}"
   fi
   GITHUB_ORGA_PAGE=$(curl -s -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION})
+  #echo $GITHUB_ORGA_PAGE | jq .
   GITHUB_ORGA_NAME=$(echo $GITHUB_ORGA_PAGE | jq -r '.name')
   GITHUB_ORGA_DESC=$(echo $GITHUB_ORGA_PAGE | jq -r '.description')
+  GITHUB_ORGA_URL=$(echo $GITHUB_ORGA_PAGE | jq -r '.html_url')
+  GITHUB_ORGA_AVATAR_URL=$(echo $GITHUB_ORGA_PAGE | jq -r '.avatar_url')
 }
 
 function get_github_repositories_info() {

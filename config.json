@@ -3,6 +3,7 @@
   "GITHUB_OAUTH_TOKEN": "",
   "GITLAB_BASEURL": "",
   "GITLAB_PERSONAL_ACCESS_TOKEN": "",
+  "GITLAB_GROUP_PREFIX": "github-backup-",
   "DUMP_EACH_NBMINUTES": 5,
   "DUMP_TO": [ "local" ]
 }

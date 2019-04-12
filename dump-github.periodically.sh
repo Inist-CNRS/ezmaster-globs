@@ -24,7 +24,7 @@ do
     echo "-> Dumping locally the $GITHUB_ORGANIZATION github organization"
     get_github_organization_info
     get_github_repositories_info
-    do_github_clones
+    #do_github_clones
 
     echo "-> Dumping on Gitlab the $GITHUB_ORGANIZATION github organization"
     create_or_update_gitlab_group
@@ -32,7 +32,7 @@ do
     # update the full organization size for the HTML view
     du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_SIZE.txt
     # update the organization repositories list for the HTML view
-    cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt
+    cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/ && ls -d */ 2>/dev/null > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_CONTENT.txt
 
 
   done # GITHUB_ORGANIZATIONS loop
