@@ -1,22 +1,6 @@
 #!/bin/bash
 
 
-# function do_gitlab_cleanup_for_old_github_organizations() {
-# 
-# # TODO
-#   for repository_to_cleanup in $*
-#   do
-#     echo "COUCOUCOU $repository_to_cleanup"
-#   done
-# 
-#   for GITHUB_ORGANIZATION_TOCLEAN in $*
-#   do
-#     # TODO : tester si le group gitlab existe
-#     echo "-> Cleaning old gitlab group $GITHUB_ORGANIZATION_TOCLEAN"
-#     # TODO appel api pour supprimer
-#   done
-# 
-# }
 
 function create_or_update_gitlab_group() {
 
