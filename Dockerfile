@@ -4,7 +4,8 @@ FROM httpd:2.4.39
 # git is widly used for this app
 # jq is used to read JSON config file
 # curl is used to query github API
-RUN apt-get update && apt-get install -yq --no-install-recommends vim git ca-certificates jq curl
+# ssh is used to generate and use key for git push to gitlab through SSH
+RUN apt-get update && apt-get install -yq --no-install-recommends vim git ca-certificates jq curl ssh
 
 
 # nodejs installation used for index.html resources

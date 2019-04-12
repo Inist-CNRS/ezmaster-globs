@@ -16,9 +16,12 @@ L'application permet de :
 
 - `GITHUB_ORGANIZATIONS` doit contenir la liste des organisation github que vous souhaitez sauvegarder.
 - `GITHUB_OAUTH_TOKEN` doit contenir le token OAUTH issu d'un compte github pour pouvoir naviguer via l'API de github dans la liste des dépôts et pouvoir dépasser la [limite de requête en mode anonyme](https://developer.github.com/v3/#rate-limiting).
-- `GITLAB_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des mirroirs.
+
+- `GITLAB_HTTP_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des mirroirs.
+- `GITLAB_SSH_BASEURL` doit pointer vers la racine de l'accès SSH du dépôt git sous gitlab (utilisé au moment de faire un git push vers gitlab via ssh).
 - `GITLAB_PERSONAL_ACCESS_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab.
 - `GITLAB_GROUP_PREFIX` contient un optionnel préfixe qui sera utilisé au moment de la création des groupes gitlab en mirroir des organizations github. Ex: "inist-cnrs" coté github deviendrait "github-backup-inist-cnrs" coté gitlab dans le cas où GITLAB_GROUP_PREFIX vaut "github-backup-"  
+
 - `DUMP_EACH_NBMINUTES` doit contenir le temps à attendre entre chaque sauvegarde.
 - `DUMP_TO` doit contenir la liste des emplacement où sauvegarder : "local" et/ou "gitlab"
 
@@ -32,7 +35,8 @@ Créez ensuite une instance de cette application et paramétrez-la en modifiant 
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
   "GITHUB_OAUTH_TOKEN": "",
-  "GITLAB_BASEURL": "https://git.abes.fr",
+  "GITLAB_HTTP_BASEURL": "https://git.abes.fr",
+  "GITLAB_SSH_BASEURL": "git@git.abes.fr",
   "GITLAB_PERSONAL_ACCESS_TOKEN": "xxxxx",
   "GITLAB_GROUP_PREFIX": "github-backup-",
   "DUMP_EACH_NBMINUTES": 1,

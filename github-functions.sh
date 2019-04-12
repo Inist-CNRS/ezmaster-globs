@@ -54,11 +54,16 @@ function get_github_repositories_info() {
     GITHUB_NAME_PAGE=$(echo $GITHUB_INFO_PAGE | jq -r '.[].name')
     for GITHUB_NAME in $GITHUB_NAME_PAGE
     do
+      #echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\")"
       GITHUB_REPOS_NAMES="$GITHUB_REPOS_NAMES $GITHUB_NAME"
       GITHUB_CU=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .clone_url")
       GITHUB_DESC=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .description")
+      GITHUB_HOME=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .homepage")
+      GITHUB_URL=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .html_url")
       echo $GITHUB_CU   > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.cu.txt
       echo $GITHUB_DESC > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.desc.txt
+      echo $GITHUB_HOME > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.home.txt
+      echo $GITHUB_URL > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.url.txt
     done
     if [ "$GITHUB_NAME_PAGE" != "" ] && [ "$GITHUB_NAME_PAGE" != "[]" ]; then
       PAGE=$(($PAGE + 1))
@@ -77,7 +82,7 @@ function get_github_repositories_info() {
 }
 
 
-function do_github_clones() {
+function do_local_mirrors() {
 
 
   # we now have all the github repositories to clone/fetch locally so do it now!
@@ -86,19 +91,19 @@ function do_github_clones() {
 
     cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
     GITHUB_CLONE_URL=$(cat $GITHUB_REPOS_NAME.cu.txt)
-    GITHUB_CLONE_FOLDER=$(basename $GITHUB_CLONE_URL)
-    if [ ! -d $GITHUB_CLONE_FOLDER ]; then
+    LOCAL_CLONE_FOLDER=$(basename $GITHUB_CLONE_URL)
+    if [ ! -d $LOCAL_CLONE_FOLDER ]; then
       echo "-> Dumping a new github repository: $GITHUB_CLONE_URL"
-      git clone -q --bare $GITHUB_CLONE_URL
+      git clone -q --mirror $GITHUB_CLONE_URL
     else
       echo "-> Fetching new data from github: $GITHUB_CLONE_URL"
-      cd $GITHUB_CLONE_FOLDER
+      cd $LOCAL_CLONE_FOLDER
       git fetch --all
     fi
     git update-server-info
 
     # update the repository size 
-    du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_CLONE_FOLDER | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_CLONE_FOLDER/GITHUB_CLONE_SIZE.txt
+    du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER/GITHUB_CLONE_SIZE.txt
 
   done # GITHUB_REPOS_NAMES loop
 

@@ -21,13 +21,18 @@ do
     mkdir -p /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/
     cp -f /usr/local/apache2/htdocs/index2.html /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/index.html
 
+
     echo "-> Dumping locally the $GITHUB_ORGANIZATION github organization"
     get_github_organization_info
     get_github_repositories_info
-    #do_github_clones
+    do_local_mirrors
 
-    echo "-> Dumping on Gitlab the $GITHUB_ORGANIZATION github organization"
+    echo "-> Dumping on gitlab the $GITHUB_ORGANIZATION github organization"
+
     create_or_update_gitlab_group
+    create_or_update_gitlab_projects
+    create_ssh_key_for_gitlab_push
+    do_gitlab_mirrors
 
     # update the full organization size for the HTML view
     du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITHUB_ORGANIZATION_SIZE.txt
