@@ -99,12 +99,11 @@ function do_local_mirrors() {
       echo "-> Fetching new data from github: $GITHUB_CLONE_URL"
       cd $LOCAL_CLONE_FOLDER
       git fetch --all
+      git update-server-info
     fi
-    git update-server-info
 
     # update the repository size 
     du -sh /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER | awk '{ print $1 }' > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER/GITHUB_CLONE_SIZE.txt
-
   done # GITHUB_REPOS_NAMES loop
 
 
