@@ -97,33 +97,39 @@ function create_ssh_key_for_gitlab_push() {
 
   echo -n "-> Creating or updating deploy keys on gitlab projects"
 
-  # generate a totally new ssh key
-  # this key will be used to push/mirror on the gitlab repositories
-  # thanks to the git command
-  rm -f ~/.ssh/*
-  ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -P ""
-  echo "StrictHostKeyChecking no" > ~/.ssh/config
-  echo -n "."
-
   for GITLAB_PROJECT_NAME in $GITHUB_REPOS_NAMES
   do
 
-    # delete the old deploy key
+    # generate a dedicated ssh key for each projects
+    # because gitlab do not allow to reuse a ssh key between projects
+    # see {"message":{"deploy_key.fingerprint":["has already been taken"]}}
+    # these keys will be used to push/mirror on the gitlab repositories thanks to the git command
+    if [ ! -f ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME ]; then
+      ssh-keygen -t rsa -f ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME -q -P ""
+      echo "StrictHostKeyChecking no" > ~/.ssh/config
+    fi
+
+    # search for the existing deploy key and update or create it
     GITLAB_DEPLOY_KEY_ID=$(curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
       $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/ \
       | jq -r ".[] | select(.title == \"$GITLAB_GROUP_NAME\") | .id | select (.!=null)")
     if [ "$GITLAB_DEPLOY_KEY_ID" != "" ]; then
-      curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X DELETE \
-        $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/$GITLAB_DEPLOY_KEY_ID
+      # update the existing gitlab project deploy key
+      curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X PUT \
+        --form "can_push=true" \
+        --form "key=$(cat ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME.pub)" \
+        --form "title=$GITLAB_GROUP_NAME" \
+        $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/$GITLAB_DEPLOY_KEY_ID \
+        >/tmp/ezmast-globs_gitlab_deploy_keys_put.log
+    else
+      # create a totally new deploy key for this gitlab project
+      curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+        --form "can_push=true" \
+        --form "key=$(cat ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME.pub)" \
+        --form "title=$GITLAB_GROUP_NAME" \
+        $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/ \
+        >/tmp/ezmast-globs_gitlab_deploy_keys_post.log
     fi
-    echo -n "."
-
-    # and create a totally new deploy key 
-    curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
-      --form "can_push=true" \
-      --form "key=$(cat ~/.ssh/id_rsa.pub)" \
-      --form "title=$GITLAB_GROUP_NAME" \
-      $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/ >/dev/null
     echo -n "."
 
   done
@@ -142,6 +148,8 @@ function do_gitlab_mirrors() {
     GITHUB_CU=$(cat /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITLAB_PROJECT_NAME.cu.txt)
     LOCAL_CLONE_FOLDER=$(basename $GITHUB_CU)
     cd /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER
+    
+    GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME" \
     git push --mirror $GITLAB_SSH_BASEURL:$GITLAB_GROUP_NAME/$LOCAL_CLONE_FOLDER
 
   done # $GITHUB_REPOS_NAMES loop
