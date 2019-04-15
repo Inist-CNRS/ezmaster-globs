@@ -11,8 +11,12 @@ export GITLAB_SSH_BASEURL="${GITLAB_SSH_BASEURL:="$(jq -r -M '.GITLAB_SSH_BASEUR
 export GITLAB_PERSONAL_ACCESS_TOKEN="${GITLAB_PERSONAL_ACCESS_TOKEN:="$(jq -r -M '.GITLAB_PERSONAL_ACCESS_TOKEN | select (.!=null)' /config.json)"}"
 export GITLAB_GROUP_PREFIX="${GITLAB_GROUP_PREFIX:="$(jq -r -M '.GITLAB_GROUP_PREFIX | select (.!=null)' /config.json)"}"
 
-echo "ezmaster-globs input parameters:"
-env | grep -E "DUMP|GITHUB|GITLAB"
+echo "Used parameters:"
+echo "----------------"
+env | grep -E "DUMP|GITHUB|GITLAB" \
+    | sed 's#GITHUB_PERSONAL_ACCESS_TOKEN=\(.*\)#GITHUB_PERSONAL_ACCESS_TOKEN=xxx#g' \
+    | sed 's#GITLAB_PERSONAL_ACCESS_TOKEN=\(.*\)#GITLAB_PERSONAL_ACCESS_TOKEN=yyy#g'
+echo "----------------"
 
 /dump-github.periodically.sh &
 
