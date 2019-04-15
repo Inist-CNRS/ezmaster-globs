@@ -11,7 +11,6 @@ export GITLAB_SSH_BASEURL="${GITLAB_SSH_BASEURL:="$(jq -r -M '.GITLAB_SSH_BASEUR
 export GITLAB_PERSONAL_ACCESS_TOKEN="${GITLAB_PERSONAL_ACCESS_TOKEN:="$(jq -r -M '.GITLAB_PERSONAL_ACCESS_TOKEN | select (.!=null)' /config.json)"}"
 export GITLAB_GROUP_PREFIX="${GITLAB_GROUP_PREFIX:="$(jq -r -M '.GITLAB_GROUP_PREFIX | select (.!=null)' /config.json)"}"
 
-env
 
 /dump-github.periodically.sh &
 
