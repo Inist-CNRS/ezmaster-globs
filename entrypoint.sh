@@ -14,8 +14,8 @@ export GITLAB_GROUP_PREFIX="${GITLAB_GROUP_PREFIX:="$(jq -r -M '.GITLAB_GROUP_PR
 echo "Used parameters:"
 echo "----------------"
 env | grep -E "DUMP|GITHUB|GITLAB" \
-    | sed 's#GITHUB_PERSONAL_ACCESS_TOKEN=\(.*\)#GITHUB_PERSONAL_ACCESS_TOKEN=xxx#g' \
-    | sed 's#GITLAB_PERSONAL_ACCESS_TOKEN=\(.*\)#GITLAB_PERSONAL_ACCESS_TOKEN=yyy#g'
+    | sed 's#GITHUB_PERSONAL_ACCESS_TOKEN=.\(.*\)#GITHUB_PERSONAL_ACCESS_TOKEN=xxx#g' \
+    | sed 's#GITLAB_PERSONAL_ACCESS_TOKEN=.\(.*\)#GITLAB_PERSONAL_ACCESS_TOKEN=yyy#g'
 echo "----------------"
 
 /dump-github.periodically.sh &
