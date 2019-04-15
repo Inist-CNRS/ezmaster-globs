@@ -10,7 +10,7 @@ L'application permet de :
 
 - régulièrement (variable `DUMP_EACH_NBMINUTES`) cloner et se synchroniser avec les dépôts des organisations github passées en argument (variable `GITHUB_ORGANIZATIONS`). A noter que seules les oganisations github sont gérées, les dépôt rattachés à des comptes github ne le sont pas.
 - mettre à disposition les dépôts clonés à travers un serveur web (protocole http) et ainsi permettre de réaliser des `git clone` en lecture seule de ces dépôts
-- (optionnellement) réaliser un mirroir des dépôts sur une instance gitlab
+- (optionnellement) réaliser un miroir des dépôts sur une instance gitlab
 - (optionnellement) être déployée sur [ezmaster](https://github.com/Inist-CNRS/ezmaster)
 
 ## Variables de configuration
@@ -21,21 +21,21 @@ L'application permet de :
 ---
 
 - `GITHUB_ORGANIZATIONS` doit contenir la liste des organisations github que vous souhaitez sauvegarder.
-- `GITHUB_PERSONAL_ACCESS_TOKEN` doit contenir le token OAUTH issu d'un compte github pour pouvoir naviguer via l'API de github dans la liste des dépôts et pouvoir dépasser la [limite de requête en mode anonyme](https://developer.github.com/v3/#rate-limiting). Pour le générer, rendez vous ici : https://github.com/settings/tokens (attention ce token ne doit pas être partagé)
+- `GITHUB_PERSONAL_ACCESS_TOKEN` doit contenir le token OAUTH issu d'un compte github pour pouvoir naviguer via l'API de github dans la liste des dépôts et pouvoir dépasser la [limite de requêtes en mode anonyme](https://developer.github.com/v3/#rate-limiting). Pour le générer, rendez-vous ici : https://github.com/settings/tokens (attention ce token ne doit pas être partagé)
 
 ---
 
-- `GITLAB_HTTP_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des mirroirs (sans le / de fin). Exemple : "https://git.abes.fr"
+- `GITLAB_HTTP_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des miroirs (sans le / de fin). Exemple : "https://git.abes.fr"
 - `GITLAB_SSH_BASEURL` doit pointer vers la racine de l'accès SSH du dépôt git sous gitlab (utilisé au moment de faire un git push vers gitlab via ssh). Exemple: "git@git.abes.fr"
 - `GITLAB_PERSONAL_ACCESS_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab. Pour le générer, rendez vous ici https://git.abes.fr/profile/personal_access_tokens (adaptez votre baseurl & attention ce token ne doit pas être partagé)
-- `GITLAB_GROUP_PREFIX` contient un optionnel préfixe qui sera utilisé au moment de la création des groupes gitlab en mirroir des organizations github. Ex: "inist-cnrs" coté github deviendrait "github-backup-inist-cnrs" coté gitlab dans le cas où GITLAB_GROUP_PREFIX vaut "github-backup-"  
+- `GITLAB_GROUP_PREFIX` contient un préfixe optionnel qui sera utilisé au moment de la création des groupes gitlab en miroir des organizations github. Ex: "inist-cnrs" côté github deviendrait "github-backup-inist-cnrs" côté gitlab dans le cas où GITLAB_GROUP_PREFIX vaut "github-backup-"  
 
 
 
 
 ## Production sans ezmaster
 
-Utilisez alors docker-compose pour déployer `ezmaster-globs`. Pour cela vous devez juste télécharger le [docker-compose.yml](https://raw.githubusercontent.com/Inist-CNRS/ezmaster-globs/master/docker-compose.yml) pret pour la production puis l'exécuter en lui passant les paramètres de configuration sous la forme de variables d'environnement de cette manière :
+Utilisez alors docker-compose pour déployer `ezmaster-globs`. Pour cela vous devez juste télécharger le [docker-compose.yml](https://raw.githubusercontent.com/Inist-CNRS/ezmaster-globs/master/docker-compose.yml) prêt pour la production puis l'exécuter en lui passant les paramètres de configuration sous la forme de variables d'environnement de cette manière :
 
 ```bash
 wget https://raw.githubusercontent.com/Inist-CNRS/ezmaster-globs/master/docker-compose.yml
