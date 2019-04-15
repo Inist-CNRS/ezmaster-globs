@@ -1,10 +1,11 @@
-FROM httpd:2.4.29
+FROM httpd:2.4.39
 
 # vim for debug
 # git is widly used for this app
 # jq is used to read JSON config file
 # curl is used to query github API
-RUN apt-get update && apt-get install -yq --no-install-recommends vim git ca-certificates jq curl
+# ssh is used to generate and use key for git push to gitlab through SSH
+RUN apt-get update && apt-get install -yq --no-install-recommends vim git ca-certificates jq curl ssh
 
 
 # nodejs installation used for index.html resources
@@ -20,10 +21,12 @@ RUN cd /usr/local/apache2/htdocs/ && npm install
 
 COPY entrypoint.sh /
 COPY dump-github.periodically.sh /
-COPY config.json /
+COPY github-functions.sh /
+COPY gitlab-functions.sh /
 
 # ezmasterization of ezmaster-globs
 # see https://github.com/Inist-CNRS/ezmaster
+COPY config.json /
 RUN echo '{ \
   "httpPort": 80, \
   "configPath": "/config.json", \

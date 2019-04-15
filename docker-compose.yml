@@ -5,11 +5,6 @@ services:
   ezmaster-globs:
     container_name: ezmaster-globs
     image: inistcnrs/ezmaster-globs:2.0.3
-    build:
-      context: .
-      args:
-        - http_proxy
-        - https_proxy
     ports:
       - 8080:80
     environment:
@@ -21,14 +16,5 @@ services:
       GITLAB_GROUP_PREFIX: ${GITLAB_GROUP_PREFIX}
       DUMP_EACH_NBMINUTES: ${DUMP_EACH_NBMINUTES}
       DUMP_TO: ${DUMP_TO}
-    volumes:
-      - ./dump-github.periodically.sh:/dump-github.periodically.sh
-      - ./github-functions.sh:/github-functions.sh
-      - ./gitlab-functions.sh:/gitlab-functions.sh
-      - ./config.json:/config.json
-      - ./entrypoint.sh:/entrypoint.sh
-      - ./index.html:/usr/local/apache2/htdocs/index.html
-      - ./index2.html:/usr/local/apache2/htdocs/index2.html
-      - ./index.css:/usr/local/apache2/htdocs/index.css
 
 

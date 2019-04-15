@@ -1,4 +1,10 @@
 {
   "GITHUB_ORGANIZATIONS": [ "inist-cnrs", "istex" ],
-  "DUMP_EACH_NBMINUTES": 5
+  "GITHUB_PERSONAL_ACCESS_TOKEN": "",
+  "GITLAB_HTTP_BASEURL": "",
+  "GITLAB_SSH_BASEURL": "",
+  "GITLAB_PERSONAL_ACCESS_TOKEN": "",
+  "GITLAB_GROUP_PREFIX": "github-backup-",
+  "DUMP_EACH_NBMINUTES": 5,
+  "DUMP_TO": [ "local" ]
 }
