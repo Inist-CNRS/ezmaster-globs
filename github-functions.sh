@@ -95,6 +95,8 @@ function do_local_mirrors() {
     if [ ! -d $LOCAL_CLONE_FOLDER ]; then
       echo "-> Dumping a new github repository: $GITHUB_CLONE_URL"
       git clone -q --mirror $GITHUB_CLONE_URL
+      cd $LOCAL_CLONE_FOLDER
+      git update-server-info
     else
       echo "-> Fetching new data from github: $GITHUB_CLONE_URL"
       cd $LOCAL_CLONE_FOLDER
