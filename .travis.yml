@@ -21,10 +21,10 @@ before_install:
   - sudo apt-get -y install git
   # build an run ezmaster-globs
   - make build
-  - docker-compose -f ./docker-compose.debug.yml up -d
+  - GITHUB_ORGANIZATIONS="ezmaster-globs-tests" docker-compose -f ./docker-compose.debug.yml up -d
   - sleep 120 ; docker-compose -f ./docker-compose.debug.yml logs
 
 script:
-  - git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
+  - git clone http://127.0.0.1:8080/ezmaster-globs-tests/travis-ci-clone-test.git
 
 
