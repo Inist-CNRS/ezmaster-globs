@@ -91,3 +91,4 @@ git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
 ```
 
 (A noter que inist-cnrs/node-xml-writer.git est un dépôt que l'on trouve sur l'organisation github inist-cnrs)
+
