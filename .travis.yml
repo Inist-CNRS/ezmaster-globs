@@ -21,7 +21,7 @@ before_install:
   - sudo apt-get -y install git
   # build an run ezmaster-globs
   - make build
-  - docker-compose -f ./docker-compose.debug.yml up -d
+  - GITHUB_PERSONAL_ACCESS_TOKEN=3bd25b4e11bc2b2523dabb4d073ba0e8f1f8b26d docker-compose -f ./docker-compose.debug.yml up -d
   - sleep 120 ; docker-compose -f ./docker-compose.debug.yml logs
 
 script:
