@@ -2,6 +2,7 @@ FROM httpd:2.4.39
 
 # vim for debug
 # git is widly used for this app
+# ca-certificates is used for https git clonning stuff and https api call
 # jq is used to read JSON config file
 # curl is used to query github API
 # ssh is used to generate and use key for git push to gitlab through SSH
