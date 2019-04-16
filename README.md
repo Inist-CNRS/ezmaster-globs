@@ -57,7 +57,7 @@ docker-compose up
 
 ## Production avec ezmaster
 
-Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inistcnrs/ezmaster-globs:2.0.3`
+Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inistcnrs/ezmaster-globs:2.1.0`
 
 Créez ensuite une instance de cette application et paramétrez-la en modifiant ces variables dans la config JSON :
 
