@@ -1,3 +1,4 @@
+# docker-compose file ready for production usage
 version: '3.4'
 
 services:

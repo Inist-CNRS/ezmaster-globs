@@ -1,3 +1,4 @@
+# docker-compose file ready for building locally docker image and debugging it 
 version: '3.4'
 
 services:
