@@ -30,9 +30,17 @@ function create_or_update_gitlab_group() {
      --form "description=$GITLAB_GROUP_DESC (backup de $GITHUB_ORGA_URL)" \
      --form "visibility=public" \
      --form "avatar_url=$GITLAB_GROUP_AVATAR_URL" \
-     $GITLAB_HTTP_BASEURLapi/v4/groups/$GITLAB_GROUP_NAME \
+     $GITLAB_HTTP_BASEURLapi/v4/groups/$GITLAB_GROUP_NAME
+
+  # retrieve the gitlab group id
+  curl -s -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
+     $GITLAB_HTTP_BASEURL/api/v4/groups/$GITLAB_GROUP_NAME \
      >/usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json
   GITLAB_GROUP_ID=$(jq -r .id /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json)
+  if [ "$GITLAB_GROUP_ID" == "" ]; then
+    echo "Fatal error: GITLAB_GROUP_ID should not be empty !"
+    exit 1
+  fi
 }
 
 function create_or_update_gitlab_projects() {
@@ -89,6 +97,7 @@ function create_or_update_gitlab_projects() {
     curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
       $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME}/archive >/dev/null
 
+    echo ""
   done # $GITHUB_REPOS_NAMES loop
 
 }
