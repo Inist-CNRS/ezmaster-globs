@@ -25,7 +25,7 @@ L'application permet de :
 
 ---
 
-- `GITLAB_HTTP_BASEURL` doit pointer vers la racine http de votre instance gitlab cible vers laquelle vous souhaitez réaliser des miroirs (sans le / de fin). Exemple : "https://git.abes.fr"
+- `GITLAB_HTTP_BASEURL` doit pointer vers la racine http(s) de votre instance gitlab cible vers laquelle vous souhaitez réaliser des miroirs (sans le / de fin). Cette URL sera utilisée pour l'accès à l'API (v4) de Gitlab. Exemple : "https://git.abes.fr"
 - `GITLAB_SSH_BASEURL` doit pointer vers la racine de l'accès SSH du dépôt git sous gitlab (utilisé au moment de faire un git push vers gitlab via ssh). Exemple: "git@git.abes.fr"
 - `GITLAB_PERSONAL_ACCESS_TOKEN` doit contenir le token permettant d'accéder à l'API de votre instance gitlab. Pour le générer, rendez vous ici https://git.abes.fr/profile/personal_access_tokens (adaptez votre baseurl & attention ce token ne doit pas être partagé)
 - `GITLAB_GROUP_PREFIX` contient un préfixe optionnel qui sera utilisé au moment de la création des groupes gitlab en miroir des organizations github. Ex: "inist-cnrs" côté github deviendrait "github-backup-inist-cnrs" côté gitlab dans le cas où GITLAB_GROUP_PREFIX vaut "github-backup-"  
