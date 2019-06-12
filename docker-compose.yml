@@ -17,5 +17,5 @@ services:
       GITLAB_GROUP_PREFIX: ${GITLAB_GROUP_PREFIX}
       DUMP_EACH_NBMINUTES: ${DUMP_EACH_NBMINUTES}
       DUMP_TO: ${DUMP_TO}
-
-
+    # Restarts ezmaster-globs container when the host server reboot
+    restart: unless-stopped
