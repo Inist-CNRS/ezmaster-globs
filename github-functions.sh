@@ -60,8 +60,18 @@ function get_github_repositories_info() {
       GITHUB_DESC=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .description")
       GITHUB_HOME=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .homepage")
       GITHUB_URL=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .html_url")
-      GITHUB_HAS_WIKI=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .has_wiki")
-      
+
+      # fill the GITHUB_HAS_WIKI parameter
+      # Notice: the following "has_wiki" attribute comming from the GitHub API is not reliable
+      #         because the wiki feature is enabled or disabled from the Github parameters and is enabled by default
+      #         So this attribute is "true" event if the wiki is empty.
+      # GITHUB_HAS_WIKI=$(echo $GITHUB_INFO_PAGE | jq -r ".[] | select(.name == \"$GITHUB_NAME\") | .has_wiki")
+      GITHUB_CLONE_WIKI_URL=$(echo $GITHUB_CU | sed 's#.git$#.wiki.git#g')
+      TMP_GIT_CLONE=$(mktemp -u -d)
+      git clone --quiet --depth 1 $GITHUB_CLONE_WIKI_URL $TMP_GIT_CLONE 2>/dev/null
+      GITHUB_HAS_WIKI=$([[ $? != 0 ]] && echo "false" || echo "true")
+      rm -rf $TMP_GIT_CLONE
+
       echo $GITHUB_CU   > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.cu.txt
       echo $GITHUB_DESC > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.desc.txt
       echo $GITHUB_HOME > /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$GITHUB_NAME.home.txt
@@ -116,8 +126,6 @@ function do_local_mirrors() {
     if [ $GITHUB_HAS_WIKI == "true" ]; then
       GITHUB_CLONE_WIKI_URL=$(echo $GITHUB_CLONE_URL | sed 's#.git$#.wiki.git#g')
       LOCAL_CLONE_WIKI_FOLDER=$(basename $GITHUB_CLONE_WIKI_URL)
-      echo "LOCAL_CLONE_WIKI_FOLDER=$LOCAL_CLONE_WIKI_FOLDER"
-      echo "GITHUB_CLONE_WIKI_URL=$GITHUB_CLONE_WIKI_URL"
       if [ ! -d $LOCAL_CLONE_WIKI_FOLDER ]; then
         echo "-> Dumping a new github wiki repository: $GITHUB_CLONE_WIKI_URL"
         git clone -q --mirror $GITHUB_CLONE_WIKI_URL
