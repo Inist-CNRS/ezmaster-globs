@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends vim git ca-cer
 
 # nodejs/npm used for versionning and debuging helpers
 # jquery and material-components-web used in index.html at the root of the local git web server
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y build-essential nodejs
 COPY index.html   /usr/local/apache2/htdocs/
 COPY index2.html  /usr/local/apache2/htdocs/

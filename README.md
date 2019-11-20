@@ -57,7 +57,7 @@ docker-compose up
 
 ## Production avec ezmaster
 
-Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inistcnrs/ezmaster-globs:2.1.6`
+Utilisez [ezmaster](https://github.com/Inist-CNRS/ezmaster) et déployez l'application `inistcnrs/ezmaster-globs:2.2.2`
 
 Créez ensuite une instance de cette application et paramétrez-la en modifiant ces variables dans la config JSON :
 
@@ -79,10 +79,10 @@ Créez ensuite une instance de cette application et paramétrez-la en modifiant 
 ```bash
 npm run build # pour construire l'image docker
 npm run debug # pour lancer le serveur web et le clonage
-DUMP_EACH_NBMINUTES=1 GITHUB_ORGANIZATIONS="abes-esr" npm run debug # pour personnaliser depuis des variables d'env
+DUMP_EACH_NBMINUTES=1 GITHUB_ORGANIZATIONS="inist-cnrs" npm run debug # pour personnaliser depuis des variables d'env
 ```
 
-Se connecter ensuite sur http://127.0.0.1:8080/ pour visualiser les dépôts, par défaut `config.json` référence les dépôts de [l'organisation github `inist-cnrs`](https://github.com/Inist-CNRS/)
+Se connecter ensuite sur http://127.0.0.1:8080/ pour visualiser les dépôts sauvegardées localement.
 
 Vous pouvez ensuite tester des clones git depuis le serveur web fourni par ezmaster-globs. Voici un exemple de clone depuis une instance d'ezmaster-globs en local qui écoute sur le port 8080 :
 
@@ -90,5 +90,5 @@ Vous pouvez ensuite tester des clones git depuis le serveur web fourni par ezmas
 git clone http://127.0.0.1:8080/inist-cnrs/node-xml-writer.git
 ```
 
-(A noter que inist-cnrs/node-xml-writer.git est un dépôt que l'on trouve sur l'organisation github inist-cnrs)
+(A noter que `inist-cnrs/node-xml-writer.git` est un dépôt que l'on trouve sur l'organisation github inist-cnrs)
 
