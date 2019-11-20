@@ -30,7 +30,7 @@ function get_github_organization_info() {
   if [ "$GITHUB_PERSONAL_ACCESS_TOKEN" != "" ]; then
     CURL_HEADER_GITHUB_AUTH="Authorization: token ${GITHUB_PERSONAL_ACCESS_TOKEN}"
   fi
-  GITHUB_ORGA_PAGE=$(curl -s -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION})
+  GITHUB_ORGA_PAGE=$(curl -s -S -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION})
   #echo $GITHUB_ORGA_PAGE | jq .
   GITHUB_ORGA_NAME=$(echo $GITHUB_ORGA_PAGE | jq -r '.name')
   GITHUB_ORGA_DESC=$(echo $GITHUB_ORGA_PAGE | jq -r '.description')
@@ -50,7 +50,7 @@ function get_github_repositories_info() {
     if [ "$GITHUB_PERSONAL_ACCESS_TOKEN" != "" ]; then
       CURL_HEADER_GITHUB_AUTH="Authorization: token ${GITHUB_PERSONAL_ACCESS_TOKEN}"
     fi
-    GITHUB_INFO_PAGE=$(curl -s -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE})
+    GITHUB_INFO_PAGE=$(curl -s -S -H "${CURL_HEADER_GITHUB_AUTH}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/orgs/${GITHUB_ORGANIZATION}/repos?page=${PAGE})
     GITHUB_NAME_PAGE=$(echo $GITHUB_INFO_PAGE | jq -r '.[].name')
     for GITHUB_NAME in $GITHUB_NAME_PAGE
     do

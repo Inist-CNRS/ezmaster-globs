@@ -11,11 +11,11 @@ function create_or_update_gitlab_group() {
   # check the $GITLAB_GROUP_NAME exists or not
   # create it if necessary and update its description
   # https://docs.gitlab.com/ee/api/groups.html#details-of-a-group
-  GITLAB_GROUP_EXISTS=$(curl -s -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" -X GET $GITLAB_HTTP_BASEURL/api/v4/groups/$GITLAB_GROUP_NAME)
+  GITLAB_GROUP_EXISTS=$(curl -s -S -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" -X GET $GITLAB_HTTP_BASEURL/api/v4/groups/$GITLAB_GROUP_NAME)
   if [ "$GITLAB_GROUP_EXISTS" == "404" ]; then
     echo "-> Gitlab $GITLAB_GROUP_NAME group does not exists, create it !"
     # https://docs.gitlab.com/ee/api/groups.html#new-group
-    curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+    curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
        --form "name=$GITLAB_GROUP_NAME" \
        --form "path=$GITLAB_GROUP_NAME" \
        --form "description=$GITLAB_GROUP_DESC (backup de $GITHUB_ORGA_URL)" \
@@ -25,7 +25,7 @@ function create_or_update_gitlab_group() {
   fi
   # update the gitlab group properties (name, description, visibility...)
   # https://docs.gitlab.com/ee/api/groups.html#update-group
-  curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X PUT \
+  curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X PUT \
      --form "name=$GITLAB_GROUP_NAME" \
      --form "description=$GITLAB_GROUP_DESC (backup de $GITHUB_ORGA_URL)" \
      --form "visibility=public" \
@@ -33,7 +33,7 @@ function create_or_update_gitlab_group() {
      $GITLAB_HTTP_BASEURLapi/v4/groups/$GITLAB_GROUP_NAME
 
   # retrieve the gitlab group id
-  curl -s -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
+  curl -s -S -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
      $GITLAB_HTTP_BASEURL/api/v4/groups/$GITLAB_GROUP_NAME \
      >/usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json
   GITLAB_GROUP_ID=$(jq -r .id /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json)
@@ -60,10 +60,10 @@ function create_or_update_gitlab_projects() {
     # check the $GITLAB_PROJECT_NAME exists or not
     # create it if necessary and update its description 
     # https://docs.gitlab.com/ee/api/projects.html#create-project
-    GITLAB_PROJECT_EXISTS=$(curl -s -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" -X GET $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME})
+    GITLAB_PROJECT_EXISTS=$(curl -s -S -H "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -o /dev/null -s -w "%{http_code}\n" -X GET $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME})
     if [ "$GITLAB_PROJECT_EXISTS" == "404" ]; then
       echo "-> Gitlab $GITLAB_GROUP_NAME/$GITLAB_PROJECT_NAME project does not exists, create it !"
-      curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+      curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
            --form "namespace_id=$GITLAB_GROUP_ID" \
            --form "name=$GITLAB_PROJECT_NAME" \
            --form "path=$GITLAB_PROJECT_NAME" \
@@ -79,7 +79,7 @@ function create_or_update_gitlab_projects() {
     fi
     # update the gitlab project properties
     LOCAL_CLONE_FOLDER=$(basename $GITHUB_CU)
-    curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X PUT \
+    curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X PUT \
          --form "namespace_id=$GITLAB_GROUP_ID" \
          --form "name=$GITLAB_PROJECT_NAME" \
          --form "description=$GITHUB_DESC $GITHUB_HOME (backup de $GITHUB_URL)" \
@@ -94,7 +94,7 @@ function create_or_update_gitlab_projects() {
          >/usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER/GITLAB_PROJECT_INFO.json
 
     # archive the gitlab project (make it readonly)
-    curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+    curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
       $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME}/archive >/dev/null
 
     echo ""
@@ -119,20 +119,20 @@ function create_ssh_key_for_gitlab_push() {
     fi
 
     # search for the existing deploy key and update or create it
-    GITLAB_DEPLOY_KEY_ID=$(curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
+    GITLAB_DEPLOY_KEY_ID=$(curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
       $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/ \
       | jq -r ".[] | select(.title == \"$GITLAB_GROUP_NAME\") | .id | select (.!=null)")
     if [ "$GITLAB_DEPLOY_KEY_ID" != "" ]; then
-      GITLAB_DEPLOY_KEY=$(curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
+      GITLAB_DEPLOY_KEY=$(curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X GET \
       $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/$GITLAB_DEPLOY_KEY_ID \
       | jq -r ".key | select (.!=null)")
       
       # update the existing gitlab project deploy key only if necessary
       if [ "$GITLAB_DEPLOY_KEY" != "$(cat ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME.pub)" ]; then
         echo "--> Update the gitlab deply key for $GITLAB_GROUP_NAME/$GITLAB_PROJECT_NAME"
-        curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X DELETE \
+        curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X DELETE \
           $GITLAB_HTTP_BASEURL/api/v4/projects/$GITLAB_GROUP_NAME%2F$GITLAB_PROJECT_NAME/deploy_keys/$GITLAB_DEPLOY_KEY_ID
-        curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+        curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
           --form "can_push=true" \
           --form "key=$(cat ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME.pub)" \
           --form "title=$GITLAB_GROUP_NAME" \
@@ -142,7 +142,7 @@ function create_ssh_key_for_gitlab_push() {
 
     else
       # create a totally new deploy key for this gitlab project
-      curl -s --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
+      curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
         --form "can_push=true" \
         --form "key=$(cat ~/.ssh/id_rsa_$GITLAB_PROJECT_NAME.pub)" \
         --form "title=$GITLAB_GROUP_NAME" \
