@@ -5,7 +5,7 @@ services:
 
   ezmaster-globs:
     container_name: ezmaster-globs
-    image: inistcnrs/ezmaster-globs:2.1.5
+    image: inistcnrs/ezmaster-globs:2.1.6
     ports:
       - 8080:80
     environment:
