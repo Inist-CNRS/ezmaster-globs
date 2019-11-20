@@ -35,9 +35,13 @@ do
     if [[ ${DUMP_TO[*]} =~ "gitlab" ]]; then
       echo "-> Dumping on gitlab the $GITHUB_ORGANIZATION github organization"
       create_or_update_gitlab_group
-      create_or_update_gitlab_projects
-      create_ssh_key_for_gitlab_push
-      do_gitlab_mirrors
+      if [ "$GITLAB_GROUP_ID" == "" ]; then
+        echo "Error: GITLAB_GROUP_ID should not be empty ! skipping gitlab mirroring."
+      else
+        create_or_update_gitlab_projects
+        create_ssh_key_for_gitlab_push
+        do_gitlab_mirrors
+      fi
     fi
 
   done # GITHUB_ORGANIZATIONS loop

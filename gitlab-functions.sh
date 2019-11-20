@@ -37,10 +37,6 @@ function create_or_update_gitlab_group() {
      $GITLAB_HTTP_BASEURL/api/v4/groups/$GITLAB_GROUP_NAME \
      >/usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json
   GITLAB_GROUP_ID=$(jq -r .id /usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/GITLAB_GROUP_INFO.json)
-  if [ "$GITLAB_GROUP_ID" == "" ]; then
-    echo "Fatal error: GITLAB_GROUP_ID should not be empty !"
-    exit 1
-  fi
 }
 
 function create_or_update_gitlab_projects() {
