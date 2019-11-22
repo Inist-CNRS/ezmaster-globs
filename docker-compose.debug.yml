@@ -5,7 +5,7 @@ services:
 
   ezmaster-globs:
     container_name: ezmaster-globs
-    image: inistcnrs/ezmaster-globs:2.2.3
+    image: inistcnrs/ezmaster-globs:2.2.4
     build:
       context: .
       args:
