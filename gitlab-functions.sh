@@ -65,7 +65,7 @@ function create_or_update_gitlab_projects() {
            --form "path=$GITLAB_PROJECT_NAME" \
            --form "description=$GITHUB_DESC $GITHUB_HOME (backup de $GITHUB_URL)" \
            --form "visibility=public" \
-           --form "archived=true" \
+           --form "archived=false" \
            --form "merge_requests_enabled=false" \
            --form "issues_enabled=false" \
            --form "wiki_enabled=false" \
@@ -80,7 +80,7 @@ function create_or_update_gitlab_projects() {
          --form "name=$GITLAB_PROJECT_NAME" \
          --form "description=$GITHUB_DESC $GITHUB_HOME (backup de $GITHUB_URL)" \
          --form "visibility=public" \
-         --form "archived=true" \
+         --form "archived=false" \
          --form "merge_requests_enabled=false" \
          --form "issues_enabled=false" \
          --form "wiki_enabled=false" \
@@ -89,9 +89,9 @@ function create_or_update_gitlab_projects() {
          $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME} \
          >/usr/local/apache2/htdocs/$GITHUB_ORGANIZATION/$LOCAL_CLONE_FOLDER/GITLAB_PROJECT_INFO.json
 
-    # archive the gitlab project (make it readonly)
+    # be sure the gitlab project is unarchive (or it's not possible to git push on it!)
     curl -s -S --header "Private-Token: $GITLAB_PERSONAL_ACCESS_TOKEN" -X POST \
-      $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME}/archive >/dev/null
+      $GITLAB_HTTP_BASEURL/api/v4/projects/${GITLAB_GROUP_NAME}%2F${GITLAB_PROJECT_NAME}/unarchive >/dev/null
 
     echo ""
   done # $GITHUB_REPOS_NAMES loop
